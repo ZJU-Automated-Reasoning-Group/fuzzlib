@@ -1,0 +1,44 @@
+{
+    "tools": {
+        "SVF": "/home/work/SVF/build/bin/wpa --print-fp --stat=false",
+        "SVFDVF": "/home/work/SVF/build/bin/dvf --print-fp --stat=false",
+        "PHASAR": "/home/work/phasar/build/tools/phasar-llvm/phasar-llvm --emit-fp-as-text -m",
+        "DSA": "/home/work/sea-dsa/build/bin/seadsa --sea-dsa-callgraph-stats",
+        "CANARY": "/home/work/canary/build/tools/canary/canary"
+    },
+    "modes": {
+        "SVF": {
+            "ander": "--nander",
+            "lazy": "--lander",
+            "hybrid": "--hander",
+            "hybridlazy": "--hlander",
+            "selective": "--sander",
+            "sfrander": "--sfrander",
+            "wave": "--wander",
+            "diff": "--ander",
+            "fs": "--fspta",
+            // "fstbhc": "--fstbhc",
+            "type": "--type",
+            "cha": "--type --vcall-cha"
+        },
+        "SVFDVF": {
+            "cxt": "--cxt --query=funptr",
+            "dfs": "--dfs --query=funptr"
+        },
+        "PHASAR": {
+            // "ander": "--pointer-analysis=CFLAnders --call-graph-analysis=NORESOLVE",
+            // "steens": "--pointer-analysis=CFLSteens --call-graph-analysis=NORESOLVE",
+            "ander+cha": "--pointer-analysis=CFLAnders --call-graph-analysis=CHA -H",
+            // "ander+rta": "--pointer-analysis=CFLAnders --call-graph-analysis=RTA",
+            "ander+dta": "--pointer-analysis=CFLAnders --call-graph-analysis=DTA",
+            // "ander+vta": "--pointer-analysis=CFLAnders --call-graph-analysis=VTA",
+            "ander+otf": "--pointer-analysis=CFLAnders --call-graph-analysis=OTF"
+        },
+        "DSA": {
+            "dsa": ""
+        },
+        "CANARY": {
+            "dyck": "-o /tmp/a.bc -print-fp-stat"
+        }
+    }
+}
