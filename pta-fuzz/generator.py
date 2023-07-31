@@ -1,4 +1,10 @@
-# coding: utf-8
+"""
+C/C++ source code generator. Currently, we use csmith and only generate .c file
+
+To generate the LLVM bitcode of a c file fname.c, you may try:
+  clang -emit-llvm -g  -o fname.bc -c fname.c
+"""
+
 # import os
 import subprocess
 # import time
@@ -10,15 +16,11 @@ import random
 # import signal
 import logging
 
-'''
-C/C++ source code generator
- Currently we use csmith and only generate .c file
-
-To generate the LLVM bitcode of a c file fname.c, you may try:
-  clang -emit-llvm -g  -o fname.bc -c fname.c
-'''
 m_generator = '/home/work/csmith/src/csmith'  # query generator
 
+"""
+Swarm testing: controlling different options of csmith to generate diverse programs
+"""
 all_swarm_opts = [
     "arrays",
     "checksum",
@@ -44,8 +46,12 @@ all_swarm_opts = [
 ]
 
 
-def checkUB(cfilename):
-    clangfc = "/usr/bin/clang -msse4.2 -m64 -I/home/peisen/work/csmith/runtime -O0 -fsanitize=undefined"
+def checkUB(cfilename: str):
+    """
+    Check whether the generated C program has undefined behavior
+    Currently, we do not use this function
+    """
+    clangfc = "/usr/bin/clang -msse4.2 -m64 -I/home/work/csmith/runtime -O0 -fsanitize=undefined"
     timeout = "timeout"
     filename = cfilename
     # filename=cfilename.split(".")[0]
@@ -86,11 +92,16 @@ def checkUB(cfilename):
         return 0
 
 
-def gencsmith(cfilename):
+def gencsmith(cfilename: str):
+    """
+    Run csmith to generate a C program (and write the program to cfilename
+    """
+    # TODO: should we always use the extra?
     extra = "--pointers --no-unions --safe-math --no-argc --no-inline-function --no-bitfields --no-return-structs " \
             "--quiet --concise"
     swarm_opt = ""
     for opt in all_swarm_opts:
+        # add options in all_swarm_opts
         p = random.randint(0, 99) / 100
         if p < 0.5:
             swarm_opt = swarm_opt + " --" + opt + " "

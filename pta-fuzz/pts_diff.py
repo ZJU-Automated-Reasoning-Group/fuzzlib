@@ -1,4 +1,6 @@
-# coding: utf-
+"""
+Differential Testing for Pointer Analyses
+"""
 import os
 import subprocess
 import time
@@ -13,6 +15,7 @@ from threading import Timer
 # import multiprocessing
 import configparser
 import logging
+from typing import List
 
 from generator import gencsmith
 
@@ -61,12 +64,12 @@ if args.config != 'no':
 
 
 def find_bc(path):
-    flist = []  # path to smtlib2 files
+    files_list = []  # path to smtlib2 files
     for root, dirs, files in os.walk(path):
         for fname in files:
             if os.path.splitext(fname)[1] == '.bc':
-                flist.append(os.path.join(root, fname))
-    return flist
+                files_list.append(os.path.join(root, fname))
+    return files_list
 
 
 def split_list(alist, wanted_parts=1):
@@ -107,6 +110,9 @@ def terminate(process, is_timeout):
 
 
 def work(idt):
+    """
+    use csmith to generate C programs continuously, and run the analyzers on each of the generated program
+    """
     log = open(out_dir + '/test-' + str(idt) + '_' + str(time.time()) + '--' + str(timeout) + '--' + str(count),
                'w')
     counter = 0
@@ -198,7 +204,7 @@ def work(idt):
 
                 # logging.debug("Results: ")
             # decide if the elements of the list are equal (solving results are identical)
-            if len(m_res_out) >= 2 and m_res_out.count(m_res_out[0]) != len(m_res_out):
+            if 2 <= len(m_res_out) != m_res_out.count(m_res_out[0]):
                 print("find inconsistency!")
                 shutil.copyfile(tmp_file_bc, crashes + name + ".bc")
                 print(tmp_file_bc)
@@ -214,7 +220,11 @@ def work(idt):
     print("We are finish here, have a good day!")
 
 
-def solve_seed(flist):
+def solve_seed(flist: List):
+    """
+    Run the analyzers on a set of bitcodes
+    TODO: currently, we do not apply mutations on the seeds
+    """
     for tmp_file in flist:
         name = tmp_file
         try:
@@ -228,12 +238,13 @@ def solve_seed(flist):
                 logging.debug("Start to solve")
                 p = subprocess.Popen(cmd2, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
                 is_timeout = [False]
+                # run the analyzers using a time limit of 3600 seconds
                 timer = Timer(3600, terminate, args=[p, is_timeout])
                 timer.start()
                 out = p.stdout.readlines()
                 out = ' '.join([str(element.decode('UTF-8')) for element in out])
                 logging.debug(out)
-                flag = 0
+                flag = 0  # if flag = 1, then there are some errors in the output of the tool
                 # some function are called xxerror
                 err_msg = ['Assertion', 'Santizer', 'PrintStackTrace', 'Segment']
                 for item in err_msg:
@@ -246,7 +257,6 @@ def solve_seed(flist):
                         if black in out:
                             flag = 0
                             break
-
                 if flag == 1:
                     print("find!")
                     print(out)
@@ -260,6 +270,7 @@ def solve_seed(flist):
             print(e)
 
 
+# initialize the thread pool
 tp = Pool(m_num_process)
 
 
@@ -271,10 +282,15 @@ def signal_handler(sig, frame):
 
 signal.signal(signal.SIGINT, signal_handler)
 
+"""
+There are two modes
+- args.seed == no: use csmith to generate C programs continuously, 
+                   and run the analyzers on each of the generated program
+- args.seed == yes: run the analyzers on a set of bitcodes (e.g., generated from real-world programs)
+"""
 if args.seed == 'no':
     for i in range(m_num_process):
         tp.apply_async(work, (i,))
-
     tp.close()
     tp.join()
 
