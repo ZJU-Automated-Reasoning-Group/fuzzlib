@@ -8,8 +8,17 @@ See `fuzzlib`
 - programs
 
 
-## Learner
+## Mutators
 
-- Finite automata learning
-- Context-free grammar learning
-- Graphfuzz (ICSE 22)
+
+
+## Other Dirs
+
+
+- `scripts/callgraph-stats`: comparing call graphs
+- `scripts/opt4spa`: configuration optimization for program analyzers
+- `scripts/pta-fuzz`: fuzzing pta
+
+## Related
+
+`https://github.com/ecfuzz/ECFuzz`
