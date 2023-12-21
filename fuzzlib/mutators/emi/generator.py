@@ -3,7 +3,7 @@ import subprocess
 import os
 import re
 
-from fuzzlib.mutators.emi import replacer, Config
+from fuzzlib.mutators.emi import Config
 
 file_num = 0
 

@@ -5,8 +5,8 @@
 ####################################################################################
 
 # Absolute path to csmith runtime directory
-runtime_dir = '/home/homework/DecFuzzer/runtime'
-csmith_absolute_path = '/home/fuzz/Documents/csmith-2.3.0/src/csmith'  #
+runtime_dir = '/home/fuzz/csmith-2.3.0/runtime'
+csmith_absolute_path = '/home/fuzz/csmith-2.3.0/src/csmith'  #
 
 ####################################################################################
 #

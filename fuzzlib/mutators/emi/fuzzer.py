@@ -2,7 +2,7 @@
 import subprocess
 import os
 
-from fuzzlib.mutators.emi import EMI_generator, generator, replacer, checker, Config
+from fuzzlib.mutators.emi import EMI_generator
 
 file_count = 0
 EMI_count = 0

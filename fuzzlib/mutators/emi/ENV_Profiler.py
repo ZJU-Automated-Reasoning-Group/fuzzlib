@@ -7,7 +7,6 @@ import copy
 from ctypes import *
 
 from fuzzlib.mutators.emi import replacer, Config
-# from EMI_generator import EMIGenerator
 from fuzzlib.mutators.emi.ContextTable import ContextTable
 
 

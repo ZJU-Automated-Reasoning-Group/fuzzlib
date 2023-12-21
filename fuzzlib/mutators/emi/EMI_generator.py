@@ -8,7 +8,7 @@ import re
 
 from fuzzlib.mutators.emi import replacer, Config, modifier
 from fuzzlib.mutators.emi.MySQL_connector import MysqlConncetor
-from fuzzlib.mutators.emi.CFG_measurer import AcceptProb, CFGInfo, Distance
+from fuzzlib.mutators.emi.CFG_measurer import AcceptProb
 from fuzzlib.mutators.emi.ENV_Profiler import Profiler, ENV, Synthesizer
 from fuzzlib.mutators.emi.ContextTable import ContextTable
 
